@@ -237,49 +237,81 @@ NO* buscarElementoArvoreComPai(NO* no, int valor, NO*& pai)
 }
 
 
-
 void removerElementoArvore(NO* no, int valor) {
+
 	NO* pai = NULL;
 	NO* atual = buscarElementoArvoreComPai(no, valor, pai);
-	if (atual == NULL) {
+
+	if (atual == NULL) 
+	{
 		cout << "Elemento nao encontrado \n";
 		return;
 	}
 
 
 	// caso 1: sem filhos	
-	
+	else if (atual->dir == NULL && atual->esq == NULL)
+	{
+		if (atual->valor > pai->valor)
+		{
+			pai->dir = NULL;
+		}
+		else
+		{
+			pai->esq = NULL;
+		}
+		free(atual);
 
+		cout << "Elementos sem filhos para serem excluidos" << endl;
+	}
 	// caso 2: um filho	
 	
-
-	// caso 3: dois filhos
-
-	// procura o elmento mais a esquerda da sub-arvore da direita
-	NO* sucessor = atual->dir;
-	NO* paiSucessor = atual;
-	while (sucessor->esq != NULL) {
-		paiSucessor = sucessor;
-		sucessor = sucessor->esq;
+		else if ((atual->dir != NULL && atual->esq == NULL) || (atual->esq != NULL && atual->dir == NULL)) 
+	{     
+			if (atual->dir != NULL) 
+			{
+				pai->dir = atual->dir;
+			}
+			else 
+			{
+				pai->esq = atual->esq;
+			}
+			cout << "Elemento com um filho excluido" <<endl;
 	}
 
-	// copia o valor do sucessor para o no atual
-	atual->valor = sucessor->valor;
-
-	// se existir uma sub-arvore a direita do sucessor , entao
-	// ela deve ser ligada ao pai do sucessor
-	if (sucessor->dir != NULL)
+	// caso 3: dois filhos	
+		else if (atual->dir != NULL && atual->esq != NULL)
 	{
-		paiSucessor->esq = sucessor->dir;
+
+		// procura o elmento mais a esquerda da sub-arvore da direita
+		NO* sucessor = atual->dir;
+		NO* paiSucessor = atual;
+		while (sucessor->esq != NULL)
+		{
+			paiSucessor = sucessor;
+			sucessor = sucessor->esq;
+		}
+
+		// copia o valor do sucessor para o no atual
+		atual->valor = sucessor->valor;
+
+		// se existir uma sub-arvore a direita do sucessor , entao
+		// ela deve ser ligada ao pai do sucessor
+		if (sucessor->dir != NULL)
+		{
+			paiSucessor->esq = sucessor->dir;
+		}
+		else
+		{
+			paiSucessor->esq = NULL;
+		}
+
+		//libera memoria
+		free(sucessor);
+
+		cout << "Elemento com dois filhos excluido" <<endl;
 	}
-	else {
-		paiSucessor->esq = NULL;
-	}
-
-	//libera memoria
-	free(sucessor);
-
-
+	
 }
 
 
